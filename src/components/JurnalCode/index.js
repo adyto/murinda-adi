@@ -1,12 +1,13 @@
 import React from 'react';
 import Navbar from '../Navbar';
 
-const LandingPage = () => {
+const JurnalCode = () => {
   return (
     <>
       <Navbar />
+      <div>JurnalCode</div>;
     </>
   );
 };
 
-export default LandingPage;
+export default JurnalCode;

@@ -1,12 +1,13 @@
 import React from 'react';
 import Navbar from '../Navbar';
 
-const LandingPage = () => {
+const ProjectCode = () => {
   return (
     <>
       <Navbar />
+      <div>ProjectCode</div>;
     </>
   );
 };
 
-export default LandingPage;
+export default ProjectCode;
