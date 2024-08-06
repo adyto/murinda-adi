@@ -1,11 +1,66 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Form, Input, Select, Space } from 'antd';
 const { Option } = Select;
 
 const FormInput = () => {
   const [selectedLevel, setSelectedLevel] = useState(0);
-  const [accType, setAccType] = useState('');
+  const [accType, setAccType] = useState('general');
+  const [selectedCurrency, setSelectedCurrency] = useState('');
+  const [dataCOA, setDataCOA] = useState([]);
+  const [resAccGroup, setResAccGroup] = useState([]);
 
+  useEffect(() => {
+    if (accType === 'general' && selectedLevel > 1) {
+      const dataCOA = [
+        {
+          kodeAcc: '1',
+          namaAcc: 'Asset',
+          groupName: 'Asset',
+          level: '1',
+          parentAcc: '',
+        },
+        {
+          kodeAcc: '11',
+          namaAcc: 'Asset Lancar',
+          groupName: 'Assets',
+          level: '2',
+          parentAcc: '1',
+        },
+        {
+          kodeAcc: '211',
+          namaAcc: 'Hutang Bank Jk Pendek',
+          groupName: 'Liabilities',
+          level: '3',
+          parentAcc: '21',
+        },
+        {
+          kodeAcc: '41.01.001',
+          namaAcc: 'Pendapatan Proyek Sipil',
+          groupName: 'Revenue',
+          level: '4',
+          parentAcc: '41.01',
+        },
+        {
+          kodeAcc: '211.01.02',
+          namaAcc: 'Mandiri IDR',
+          groupName: 'Liabilities',
+          level: '5',
+          parentAcc: '211.01',
+        },
+      ];
+      const filterDataCOA = dataCOA.filter((x) => x.level < selectedLevel);
+      const filterLevel = selectedLevel - 1;
+
+      let arrayResultCOA = [];
+      for (let i = 0; i < filterDataCOA.length; i++) {
+        if (filterDataCOA[i].level == filterLevel) {
+          arrayResultCOA.push(filterDataCOA[i]);
+        }
+      }
+      setDataCOA(arrayResultCOA);
+    }
+  }, [accType, selectedLevel]);
+  console.log(dataCOA);
   const onFinish = (values) => {
     console.log('Success:', values);
   };
@@ -22,7 +77,8 @@ const FormInput = () => {
   };
 
   const handleChangeAccParents = (value) => {
-    console.log(value);
+    const filterAccGroup = dataCOA.filter((x) => x.parentAcc === value);
+    setResAccGroup(filterAccGroup[0]?.groupName);
   };
 
   const handleChangeAccGroup = (value) => {
@@ -34,10 +90,11 @@ const FormInput = () => {
   };
 
   const handleChangeCurrency = (value) => {
+    setSelectedCurrency(value);
     console.log(value);
   };
+  console.log(resAccGroup);
 
-  console.log(selectedLevel);
   return (
     <>
       <Form
@@ -76,7 +133,6 @@ const FormInput = () => {
         >
           <Input />
         </Form.Item>
-
         <Form.Item
           label="Acc. Name :"
           name="accName"
@@ -99,7 +155,8 @@ const FormInput = () => {
             className="w-full h-14"
           >
             <Select
-              defaultValue="general"
+              // defaultValue={accType === '' ? 'general' : accType}
+              defaultValue={'general'}
               className="w-full"
               onChange={handleChangeType}
               options={[
@@ -176,14 +233,14 @@ const FormInput = () => {
             />
           </Form.Item>
         </div>
-
         <Form.Item
           label="Acc. Parents :"
           name="accParents"
           layout="vertical"
           rules={[
             {
-              required: selectedLevel === 1 ? false : true,
+              required:
+                selectedLevel === 1 || dataCOA !== undefined ? false : true,
               message: 'Please input your acc parents!',
             },
           ]}
@@ -193,19 +250,27 @@ const FormInput = () => {
             //   defaultValue="lucy"
             className="w-full"
             onChange={handleChangeAccParents}
-            options={[
-              {
-                value: 'general',
-                label: 'General',
-              },
-              {
-                value: 'Detil',
-                label: 'detil',
-              },
-            ]}
-          />
+            disabled={
+              accType === 'general' && selectedLevel === 1 ? true : false
+            }
+            // options={[
+            //   {
+            //     value: 'general',
+            //     label: 'General',
+            //   },
+            //   {
+            //     value: 'Detil',
+            //     label: 'detil',
+            //   },
+            // ]}
+          >
+            {dataCOA.map((item) => (
+              <Select.Option value={item.parentAcc}>
+                {item.kodeAcc}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
-
         <Form.Item
           label="Acc. Group :"
           name="accGroup"
@@ -218,58 +283,61 @@ const FormInput = () => {
           ]}
           className="h-14"
         >
-          <Select
-            //   defaultValue="lucy"
-            className="w-full"
-            onChange={handleChangeAccGroup}
-            options={[
-              {
-                value: 'asset',
-                label: 'Asset',
-              },
-              {
-                value: 'liabilities',
-                label: 'Liabilities',
-              },
-              {
-                value: 'capital',
-                label: 'Capital',
-              },
-              {
-                value: 'revenue',
-                label: 'Revenue',
-              },
-              {
-                value: 'cogs',
-                label: 'COGS',
-              },
-              {
-                value: 'expences',
-                label: 'Expences',
-              },
-              {
-                value: 'other-revenue',
-                label: 'Other Revenue',
-              },
-              {
-                value: 'other-expences',
-                label: 'Other Expences',
-              },
-            ]}
-          />
+          {accType === 'general' && selectedLevel > 1 ? (
+            // <Select
+            //   // defaultValue="lucy"
+            //   defaultValue={resAccGroup}
+            //   className="w-full"
+            //   disabled
+            //   options={[
+            //     {
+            //       value: `${resAccGroup}`,
+            //       label: `${resAccGroup}`,
+            //     },
+            //   ]}
+            // >
+            //   {/* <Select.Option value={resAccGroup}>{resAccGroup}</Select.Option> */}
+            // </Select>
+            <Input value={`${resAccGroup}`} />
+          ) : (
+            <Select
+              //   defaultValue="lucy"
+              className="w-full"
+              onChange={handleChangeAccGroup}
+            >
+              <Select.Option value="asset">Asset</Select.Option>
+              <Select.Option value="liabilities">Liabilities</Select.Option>
+              <Select.Option value="capital">Capital</Select.Option>
+              <Select.Option value="revenue">Revenue</Select.Option>
+              <Select.Option value="cogs">COGS</Select.Option>
+              <Select.Option value="expences">Expences</Select.Option>
+              <Select.Option value="other-revenue">Other Revenue</Select.Option>
+              <Select.Option value="other-expences">
+                Other Expences
+              </Select.Option>
+            </Select>
+          )}
         </Form.Item>
-
         <div className="flex flex-row justify-between">
           <Form.Item
-            label="Acc.Control :"
+            label="Acc.Control:"
             name="accControl"
             layout="vertical"
             className="w-full h-14"
+            rules={[
+              {
+                required: accType === 'detil' ? true : false,
+                message: 'Please select a type of control',
+              },
+            ]}
           >
             <Select
               // defaultValue="general"
               className="w-full"
               onChange={handleChangeAccControl}
+              disabled={
+                accType === 'general' && selectedLevel === 1 ? true : false
+              }
               options={[
                 {
                   value: 'none',
@@ -307,6 +375,9 @@ const FormInput = () => {
               // }}
               className="w-full"
               onChange={handleChangeCurrency}
+              disabled={
+                accType === 'general' && selectedLevel === 1 ? true : false
+              }
               options={[
                 {
                   value: 'std',
@@ -316,10 +387,25 @@ const FormInput = () => {
                   value: 'usd',
                   label: 'USD',
                 },
+                {
+                  value: 'euro',
+                  label: 'EURO',
+                },
               ]}
             />
           </Form.Item>
         </div>
+        <Checkbox
+          onChange={(e) => console.log(e.target.checked)}
+          disabled={accType === 'general' && selectedLevel === 1 ? true : false}
+        >
+          Department
+        </Checkbox>
+        {selectedCurrency !== 'std' ? null : (
+          <Checkbox onChange={(e) => console.log(e.target.checked)}>
+            Gain-loss
+          </Checkbox>
+        )}
         <Form.Item
           wrapperCol={{
             offset: 8,
