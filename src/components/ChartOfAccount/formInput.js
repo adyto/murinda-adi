@@ -25,41 +25,16 @@ const FormInput = () => {
     console.log(value);
   };
 
-  const [form] = Form.useForm();
-  const onGenderChange = (value) => {
-    switch (value) {
-      case 'male':
-        form.setFieldsValue({
-          note: 'Hi, man!',
-        });
-        break;
-      case 'female':
-        form.setFieldsValue({
-          note: 'Hi, lady!',
-        });
-        break;
-      case 'other':
-        form.setFieldsValue({
-          note: 'Hi there!',
-        });
-        break;
-      default:
-    }
+  const handleChangeAccGroup = (value) => {
+    console.log(value);
   };
-  const onReset = () => {
-    form.resetFields();
+
+  const handleChangeAccControl = (value) => {
+    console.log(value);
   };
-  const onFill = () => {
-    form.setFieldsValue({
-      note: 'Hello world!',
-      gender: 'male',
-    });
-  };
-  const tailLayout = {
-    wrapperCol: {
-      offset: 8,
-      span: 16,
-    },
+
+  const handleChangeCurrency = (value) => {
+    console.log(value);
   };
 
   console.log(selectedLevel);
@@ -124,26 +99,17 @@ const FormInput = () => {
             className="w-full h-14"
           >
             <Select
-              defaultValue="lucy"
+              defaultValue="general"
               className="w-full"
               onChange={handleChangeType}
               options={[
                 {
-                  value: 'jack',
-                  label: 'Jack',
+                  value: 'general',
+                  label: 'General',
                 },
                 {
-                  value: 'lucy',
-                  label: 'Lucy',
-                },
-                {
-                  value: 'Yiminghe',
-                  label: 'yiminghe',
-                },
-                {
-                  value: 'disabled',
-                  label: 'Disabled',
-                  disabled: true,
+                  value: 'detil',
+                  label: 'Detil',
                 },
               ]}
             />
@@ -153,12 +119,19 @@ const FormInput = () => {
             name="level"
             layout="vertical"
             className="w-full h-14"
+            rules={[
+              {
+                required: selectedLevel === 0 ? true : false,
+                message: 'Please input your level!',
+              },
+            ]}
           >
             <Select
               // defaultValue="lucy"
               // style={{
               //   width: 120,
               // }}
+              // defaultValue={1}
               className="w-full"
               onChange={handleChangeLevel}
               options={[
@@ -222,26 +195,131 @@ const FormInput = () => {
             onChange={handleChangeAccParents}
             options={[
               {
-                value: 'jack',
-                label: 'Jack',
+                value: 'general',
+                label: 'General',
               },
               {
-                value: 'lucy',
-                label: 'Lucy',
-              },
-              {
-                value: 'Yiminghe',
-                label: 'yiminghe',
-              },
-              {
-                value: 'disabled',
-                label: 'Disabled',
-                disabled: true,
+                value: 'Detil',
+                label: 'detil',
               },
             ]}
           />
         </Form.Item>
 
+        <Form.Item
+          label="Acc. Group :"
+          name="accGroup"
+          layout="vertical"
+          rules={[
+            {
+              required: false,
+              message: 'Please input your acc group!',
+            },
+          ]}
+          className="h-14"
+        >
+          <Select
+            //   defaultValue="lucy"
+            className="w-full"
+            onChange={handleChangeAccGroup}
+            options={[
+              {
+                value: 'asset',
+                label: 'Asset',
+              },
+              {
+                value: 'liabilities',
+                label: 'Liabilities',
+              },
+              {
+                value: 'capital',
+                label: 'Capital',
+              },
+              {
+                value: 'revenue',
+                label: 'Revenue',
+              },
+              {
+                value: 'cogs',
+                label: 'COGS',
+              },
+              {
+                value: 'expences',
+                label: 'Expences',
+              },
+              {
+                value: 'other-revenue',
+                label: 'Other Revenue',
+              },
+              {
+                value: 'other-expences',
+                label: 'Other Expences',
+              },
+            ]}
+          />
+        </Form.Item>
+
+        <div className="flex flex-row justify-between">
+          <Form.Item
+            label="Acc.Control :"
+            name="accControl"
+            layout="vertical"
+            className="w-full h-14"
+          >
+            <Select
+              // defaultValue="general"
+              className="w-full"
+              onChange={handleChangeAccControl}
+              options={[
+                {
+                  value: 'none',
+                  label: 'None',
+                },
+                {
+                  value: 'cash/bank',
+                  label: 'Cash/Bank',
+                },
+                {
+                  value: 'acc-receivable',
+                  label: 'Acc. Receivable',
+                },
+                {
+                  value: 'acc-payable',
+                  label: 'Acc. Payable',
+                },
+                {
+                  value: 'fixed-asset',
+                  label: 'Fixed Asset',
+                },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Currency"
+            name="currency"
+            layout="vertical"
+            className="w-full h-14"
+          >
+            <Select
+              // defaultValue="lucy"
+              // style={{
+              //   width: 120,
+              // }}
+              className="w-full"
+              onChange={handleChangeCurrency}
+              options={[
+                {
+                  value: 'std',
+                  label: 'STD',
+                },
+                {
+                  value: 'usd',
+                  label: 'USD',
+                },
+              ]}
+            />
+          </Form.Item>
+        </div>
         <Form.Item
           wrapperCol={{
             offset: 8,
@@ -251,89 +329,6 @@ const FormInput = () => {
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
-        </Form.Item>
-      </Form>
-      <Form
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        form={form}
-        name="control-hooks"
-        onFinish={onFinish}
-        style={{
-          maxWidth: 600,
-        }}
-        className="flex flex-col"
-      >
-        <Form.Item
-          name="note"
-          label="Note"
-          layout="vertical"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-          className="inline-block h-20"
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="gender"
-          label="Gender"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select
-            placeholder="Select a option and change input text above"
-            onChange={onGenderChange}
-            allowClear
-          >
-            <Option value="male">male</Option>
-            <Option value="female">female</Option>
-            <Option value="other">other</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.gender !== currentValues.gender
-          }
-        >
-          {({ getFieldValue }) =>
-            getFieldValue('gender') === 'other' ? (
-              <Form.Item
-                name="customizeGender"
-                label="Customize Gender"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            ) : null
-          }
-        </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Space>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-            <Button htmlType="button" onClick={onReset}>
-              Reset
-            </Button>
-            <Button type="link" htmlType="button" onClick={onFill}>
-              Fill form
-            </Button>
-          </Space>
         </Form.Item>
       </Form>
     </>
