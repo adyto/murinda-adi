@@ -108,9 +108,9 @@ const FormInput = () => {
         wrapperCol={{
           span: 16,
         }}
-        style={{
-          maxWidth: 600,
-        }}
+        // style={{
+        //   maxWidth: 600,
+        // }}
         initialValues={{
           remember: true,
         }}
@@ -118,7 +118,7 @@ const FormInput = () => {
         onFinishFailed={onFinishFailed}
         //   variant="borderless"
         autoComplete="off"
-        className="flex flex-col gap-2 p-4 border rounded-lg"
+        className="flex flex-col gap-2 p-4 border rounded-lg max-w-96 sm:max-w-[500px] md:max-w-[600px]"
       >
         <Form.Item
           label="Acc. Code :"
@@ -384,16 +384,22 @@ const FormInput = () => {
             />
           </Form.Item>
         </div>
-        <Checkbox
-          onChange={(e) => console.log(e.target.checked)}
-          disabled={accType === 'general' && selectedLevel === 1 ? true : false}
-        >
-          Department
-        </Checkbox>
-        {selectedCurrency !== 'std' ? null : (
-          <Checkbox onChange={(e) => console.log(e.target.checked)}>
-            Gain-loss
+        <Form.Item name={'department'} valuePropName="checked">
+          <Checkbox
+            onChange={(e) => console.log(e.target.checked)}
+            disabled={
+              accType === 'general' && selectedLevel === 1 ? true : false
+            }
+          >
+            Department
           </Checkbox>
+        </Form.Item>
+        {selectedCurrency === 'std' ? null : (
+          <Form.Item name={'gain-loss'} valuePropName="checked">
+            <Checkbox onChange={(e) => console.log(e.target.checked)}>
+              Gain-loss
+            </Checkbox>
+          </Form.Item>
         )}
         <Form.Item
           wrapperCol={{
