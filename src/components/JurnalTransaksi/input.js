@@ -1,11 +1,12 @@
 import React from 'react';
 import Navbar from '../Navbar';
+import FormTransaksi from './formTransaksi';
 
 const InputJurnalTransaksi = () => {
   return (
     <>
       <Navbar />
-      <div>InputJurnalTransaksi</div>;
+      <FormTransaksi />
     </>
   );
 };

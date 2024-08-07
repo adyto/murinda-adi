@@ -394,7 +394,7 @@ const FormInput = () => {
             Department
           </Checkbox>
         </Form.Item>
-        {selectedCurrency === 'std' ? null : (
+        {selectedCurrency === 'std' || selectedCurrency === '' ? null : (
           <Form.Item name={'gain-loss'} valuePropName="checked">
             <Checkbox onChange={(e) => console.log(e.target.checked)}>
               Gain-loss
