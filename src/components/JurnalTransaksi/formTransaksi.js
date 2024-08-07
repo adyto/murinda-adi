@@ -1,6 +1,8 @@
-import { Button, Checkbox, Form, Input, DatePicker } from 'antd';
+import { Button, Checkbox, Form, Input, DatePicker, Modal, Table } from 'antd';
 import React, { useState } from 'react';
-import { FileSearchOutlined } from '@ant-design/icons';
+import { FileSearchOutlined, SearchOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import TableTransaksi from './tableTransaksi';
 // <FileSearchOutlined />
 
 const FormTransaksi = () => {
@@ -10,20 +12,43 @@ const FormTransaksi = () => {
   const [date, setDate] = useState('');
   const [project, setProject] = useState('');
   const [remarks, setRemarks] = useState('');
+  const [isModalJurnalCode, setIsModalJurnalCode] = useState(false);
+
   const dataMasterJurnal = [
     {
       code: '123',
       name: 'Test123',
+      lastNumber: '321',
     },
     {
       code: '456',
       name: 'Test456',
+      lastNumber: '654',
     },
     {
       code: '789',
       name: 'Test789',
+      lastNumber: '987',
     },
   ];
+  const columnsMasterJurnal = [
+    {
+      title: 'Code',
+      dataIndex: 'code',
+      key: 'code',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Last Number',
+      dataIndex: 'lastNumber',
+      key: 'lastNumber',
+    },
+  ];
+
   const onFinish = (values) => {
     console.log('Success:', values);
   };
@@ -37,6 +62,7 @@ const FormTransaksi = () => {
   };
   console.log(jurnalCode);
   console.log(numberCode);
+  console.log(isModalJurnalCode);
 
   return (
     <div className="container flex flex-col mx-auto">
@@ -63,11 +89,12 @@ const FormTransaksi = () => {
             // ]}
           >
             <Input
+              disabled
               value={jurnalCode}
               onChange={(e) => setJurnalCode(e.target.value)}
               className="w-24 mr-4 lg:w-40 md:w-36"
             />
-            <FileSearchOutlined />
+            <FileSearchOutlined onClick={() => setIsModalJurnalCode(true)} />
           </Form.Item>
 
           <Form.Item
@@ -92,13 +119,13 @@ const FormTransaksi = () => {
               onChange={(date, dateString) =>
                 handleDatePickerChange(date, dateString)
               }
+              disabledDate={(current) => {
+                return current && current > dayjs().endOf('day');
+              }}
             />
           </Form.Item>
         </div>
         <div className="flex flex-col">
-          <Form.Item label="No Ref:" name="noRef" className="w-full text-start">
-            <Input value={noRef} onChange={(e) => setNoRef(e.target.value)} />
-          </Form.Item>
           <Form.Item
             label="Project"
             name="project"
@@ -114,6 +141,9 @@ const FormTransaksi = () => {
               onChange={(e) => setProject(e.target.value)}
             />
           </Form.Item>
+          <Form.Item label="No Ref:" name="noRef" className="w-full text-start">
+            <Input value={noRef} onChange={(e) => setNoRef(e.target.value)} />
+          </Form.Item>
 
           <Form.Item label="Remarks" name={'remarks'}>
             <Input
@@ -123,10 +153,42 @@ const FormTransaksi = () => {
           </Form.Item>
         </div>
         <div>
+          <FileSearchOutlined />
+        </div>
+        <div>
           <Input />
         </div>
       </Form>
-      <h2>123312</h2>
+      <TableTransaksi />
+      <Modal
+        title="Jurnal Code"
+        open={isModalJurnalCode}
+        // onOk={handleOk}
+        onCancel={() => setIsModalJurnalCode(false)}
+        footer={[
+          <Button key="back" onClick={() => setIsModalJurnalCode(false)}>
+            Return
+          </Button>,
+        ]}
+      >
+        <Table
+          columns={columnsMasterJurnal}
+          dataSource={dataMasterJurnal}
+          onRow={(record) => {
+            return {
+              onDoubleClick: () => {
+                setJurnalCode(record.code);
+                setIsModalJurnalCode(false);
+                console.log(record);
+              },
+              onClick: () => {
+                setJurnalCode(record.code);
+                setIsModalJurnalCode(false);
+              },
+            };
+          }}
+        />
+      </Modal>
     </div>
   );
 };
