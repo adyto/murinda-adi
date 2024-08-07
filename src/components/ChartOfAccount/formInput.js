@@ -10,12 +10,12 @@ const FormInput = () => {
   const [resAccGroup, setResAccGroup] = useState([]);
 
   useEffect(() => {
-    if (accType === 'general' && selectedLevel > 1) {
+    if ((accType === 'general' || accType === 'detil') && selectedLevel > 1) {
       const dataCOA = [
         {
           kodeAcc: '1',
           namaAcc: 'Asset',
-          groupName: 'Asset',
+          groupName: 'Assets',
           level: '1',
           parentAcc: '',
         },
@@ -69,7 +69,9 @@ const FormInput = () => {
   };
 
   const handleChangeType = (value) => {
+    setSelectedLevel(0);
     setAccType(value);
+    console.log(selectedLevel);
   };
 
   const handleChangeLevel = (value) => {
@@ -94,9 +96,10 @@ const FormInput = () => {
     console.log(value);
   };
   console.log(resAccGroup);
+  console.log(dataCOA);
 
   return (
-    <>
+    <div className="w-full mx-auto max-w-[600px]">
       <Form
         name="basic"
         labelCol={{
@@ -284,21 +287,7 @@ const FormInput = () => {
           className="h-14"
         >
           {accType === 'general' && selectedLevel > 1 ? (
-            // <Select
-            //   // defaultValue="lucy"
-            //   defaultValue={resAccGroup}
-            //   className="w-full"
-            //   disabled
-            //   options={[
-            //     {
-            //       value: `${resAccGroup}`,
-            //       label: `${resAccGroup}`,
-            //     },
-            //   ]}
-            // >
-            //   {/* <Select.Option value={resAccGroup}>{resAccGroup}</Select.Option> */}
-            // </Select>
-            <Input value={`${resAccGroup}`} />
+            <h1>{resAccGroup}</h1>
           ) : (
             <Select
               //   defaultValue="lucy"
@@ -417,7 +406,7 @@ const FormInput = () => {
           </Button>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };
 
